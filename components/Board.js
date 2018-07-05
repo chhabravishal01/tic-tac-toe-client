@@ -78,9 +78,13 @@ class Board extends Component {
     Socket.sendData("leaveRoom", { roomId: this.state.roomId });
   };
 
+  sleep = time => {
+    return new Promise(resolve => setTimeout(resolve, time));
+  };
+
   reloadForOnlineGame = () => {
     this.setState({
-      symbols: Array(9).fill(""),
+      // symbols: Array(9).fill(""),
       nextSymbol: "X",
       // gridKey: 1,
       currentMode: "Online",
@@ -89,6 +93,11 @@ class Board extends Component {
       occupiedCells: 0,
       gameEnd: false
     });
+
+    Animated.timing(this.state.symbolSize, {
+      toValue: 1,
+      duration: 500
+    }).start();
 
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
 
@@ -104,6 +113,12 @@ class Board extends Component {
     Animated.timing(this.state.dLineAngle, {
       toValue: 0
     }).start();
+
+    this.sleep(1000).then(() => {
+      this.setState({
+        symbols: Array(9).fill("")
+      });
+    });
   };
 
   reload = (proceed = false) => {
